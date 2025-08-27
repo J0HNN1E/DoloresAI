@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  dolores:
+    build: .
+    image: ghcr.io/JOHNN1Ez/dolores:latest
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - dolores_data:/app/data
+    working_dir: /app
+    command: ["python", "main.py"]
+volumes:
+  dolores_data:
