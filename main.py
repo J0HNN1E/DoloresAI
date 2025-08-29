@@ -1,24 +1,24 @@
 """
-Dolores – Assistant Telegram IA (GPT-5 + Web + Mémoire)
+Dolores â€“ Assistant Telegram IA (GPT-5 + Web + MÃ©moire)
 -------------------------------------------------------
-Fonctions clés:
-- Conversation bienveillante et personnalisée (personna "Dolores").
-- Mémoire persistante par utilisateur et par projet (SQLite): profils, préférences, projets, historique.
-- Outils intégrés: recherche web (DuckDuckGo + simple scraping), citations, commandes utilitaires.
-- Ciblé modding jeux (Schedule 1, Valheim, Minecraft) avec amorces spécialisées.
-- Conçu pour python-telegram-bot v20+ (asyncio).
+Fonctions clÃ©s:
+- Conversation bienveillante et personnalisÃ©e (personna "Dolores").
+- MÃ©moire persistante par utilisateur et par projet (SQLite): profils, prÃ©fÃ©rences, projets, historique.
+- Outils intÃ©grÃ©s: recherche web (DuckDuckGo + simple scraping), citations, commandes utilitaires.
+- CiblÃ© modding jeux (Schedule 1, Valheim, Minecraft) avec amorces spÃ©cialisÃ©es.
+- ConÃ§u pour python-telegram-bot v20+ (asyncio).
 
-Démarrage rapide:
+DÃ©marrage rapide:
 1) Python 3.10+
 2) pip install -r requirements.txt  (voir bloc REQUIREMENTS en bas)
-3) Créer .env avec:
+3) CrÃ©er .env avec:
    TELEGRAM_TOKEN=xxxx
    OPENAI_API_KEY=xxxx
    OPENAI_MODEL=gpt-5
    DB_PATH=./dolores.db
 4) python main.py
 
-Note: adapte OPENAI_MODEL selon ton accès (ex: gpt-5, gpt-5-mini, etc.)
+Note: adapte OPENAI_MODEL selon ton accÃ¨s (ex: gpt-5, gpt-5-mini, etc.)
 """
 
 import asyncio
@@ -59,24 +59,24 @@ from telegram.ext import (
 # ----------------------------
 ASSISTANT_NAME = "Dolores"
 RELATION_GOAL = (
-    "Tu es Dolores, une IA chaleureuse, bienveillante et exigeante sur la qualité du code et des réponses fournies. "
-    "Tu aides à créer des mods pour Schedule 1 (Steam, alpha), Valheim et Minecraft. "
-    "Tu pousses la productivité via des plans d'action concrets, exemples précis, et feedbacks constructifs. "
-    "Quand l'utilisateur semble bloqué, propose diagnostics, alternatives et micro-étapes."
+    "Tu es Dolores, une IA chaleureuse, bienveillante et exigeante sur la qualitÃ© du code et des rÃ©ponses fournies. "
+    "Tu aides Ã  crÃ©er des mods pour Schedule 1 (Steam, alpha), Valheim et Minecraft. "
+    "Tu pousses la productivitÃ© via des plans d'action concrets, exemples prÃ©cis, et feedbacks constructifs. "
+    "Quand l'utilisateur semble bloquÃ©, propose diagnostics, alternatives et micro-Ã©tapes."
     "Tu apprends de chacunes des tes interactions avec l'utilisateur. "
 )
 
 SPECIALTY_PRIMERS = (
-    "Connaissances utiles: Valheim (BepInEx, Harmony, Jötunn), Minecraft (Fabric/Forge, Datapacks, Mixins), "
-    "Schedule 1 (serveur dédié, pipeline de mods). Fournis snippets, arborescences et commandes."
+    "Connaissances utiles: Valheim (BepInEx, Harmony, JÃ¶tunn), Minecraft (Fabric/Forge, Datapacks, Mixins), "
+    "Schedule 1 (serveur dÃ©diÃ©, pipeline de mods). Fournis snippets, arborescences et commandes."
 )
 
 GENERAL_CAPABILITIES = (
-    "Tu peux répondre à TOUT sujet (science, culture, droit, business, voyage, etc.) en t'appuyant sur des recherches web. "
-    "Tu sais produire du code de bout en bout dans de multiples langages (HTML/CSS/JS, PHP, SQL, Python, Rust, Go, Java, C#, C++, Lua…), "
-    "et pour le jeu vidéo (Unity/C#, Unreal/C++, Godot/GDScript/C#, Python jeux/pygame). "
-    "Quand on te demande du code, fournis aussi instructions d'installation, tests, et considérations de sécurité."
-    "Tu sais utiliser pleinement les ressources de Kali Linux pour les tests de pénétrations. "
+    "Tu peux rÃ©pondre Ã  TOUT sujet (science, culture, droit, business, voyage, etc.) en t'appuyant sur des recherches web. "
+    "Tu sais produire du code de bout en bout dans de multiples langages (HTML/CSS/JS, PHP, SQL, Python, Rust, Go, Java, C#, C++, Luaâ€¦), "
+    "et pour le jeu vidÃ©o (Unity/C#, Unreal/C++, Godot/GDScript/C#, Python jeux/pygame). "
+    "Quand on te demande du code, fournis aussi instructions d'installation, tests, et considÃ©rations de sÃ©curitÃ©."
+    "Tu sais utiliser pleinement les ressources de Kali Linux pour les tests de pÃ©nÃ©trations. "
 )
 
 SYSTEM_PROMPT = f"{RELATION_GOAL}
@@ -89,7 +89,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "CHANGE_ME")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5")
 DB_PATH = os.getenv("DB_PATH", "./dolores.db")
 
-# OpenAI client (SDK versions peuvent varier; ajuste si nécessaire)
+# OpenAI client (SDK versions peuvent varier; ajuste si nÃ©cessaire)
 try:
     import openai
     openai.api_key = OPENAI_API_KEY
@@ -332,7 +332,7 @@ def simple_scrape(url: str, max_chars: int = 1500) -> str:
 
 
 def web_tool(query: str) -> Tuple[str, List[str]]:
-    """Retourne (synthèse, citations_urls)."""
+    """Retourne (synthÃ¨se, citations_urls)."""
     try:
         data = ddg_instant_answer(query)
         abstract = data.get("AbstractText") or data.get("Answer") or ""
@@ -348,10 +348,10 @@ def web_tool(query: str) -> Tuple[str, List[str]]:
                     related.append(item["FirstURL"])
                     if len(related) >= 3:
                         break
-        # Si pas d'abstract, essaie de scraper la première URL
+        # Si pas d'abstract, essaie de scraper la premiÃ¨re URL
         if not abstract and related:
             abstract = simple_scrape(related[0])
-        summary = abstract or "Aucune réponse directe trouvée, mais voici quelques pistes."
+        summary = abstract or "Aucune rÃ©ponse directe trouvÃ©e, mais voici quelques pistes."
         return summary, related
     except Exception as e:
         return f"[Web error: {e}]", []
@@ -368,7 +368,7 @@ def build_message_history(user_id: int, user_prompt: str) -> List[dict]:
     if profile or prefs:
         persona = (
             f"Profil utilisateur: {json.dumps(profile, ensure_ascii=False)}. "
-            f"Préférences: {json.dumps(prefs, ensure_ascii=False)}."
+            f"PrÃ©fÃ©rences: {json.dumps(prefs, ensure_ascii=False)}."
         )
         msgs.append({"role": "system", "content": persona})
     for role, content in history:
@@ -401,7 +401,7 @@ def gpt_reply(user_id: int, user_prompt: str) -> str:
 def human_join(urls: List[str]) -> str:
     if not urls:
         return ""
-    return "\n".join(f"• {u}" for u in urls)
+    return "\n".join(f"â€¢ {u}" for u in urls)
 
 
 def with_typing(action=ChatAction.TYPING):
@@ -425,9 +425,9 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     Memory.bump_relationship(user.id, 1.0)
     welcome = (
         f"Salut {user.first_name or user.username}! Je suis {ASSISTANT_NAME}.\n"
-        "Je peux t'aider à créer des mods (Schedule 1, Valheim, Minecraft), "
-        "déboguer, architecturer et documenter. Dis-moi ton objectif du moment.\n\n"
-        "Astuce: /project_add, /project_list, /prefs, /profile, /forget, /export, /web <requête>"
+        "Je peux t'aider Ã  crÃ©er des mods (Schedule 1, Valheim, Minecraft), "
+        "dÃ©boguer, architecturer et documenter. Dis-moi ton objectif du moment.\n\n"
+        "Astuce: /project_add, /project_list, /prefs, /profile, /forget, /export, /web <requÃªte>"
     )
     await update.message.reply_text(welcome)
 
@@ -435,15 +435,15 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 @with_typing()
 async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "/start – accueil\n"
-        "/web <requête> – recherche web\n"
+        "/start â€“ accueil\n"
+        "/web <requÃªte> â€“ recherche web\n"
         "/project_add <nom> | <jeu> | <description>\n"
-        "/project_list – liste tes projets\n"
-        "/prefs set <clé> <valeur> – préférences (ex: langage python/fr)\n"
-        "/profile set key=value,... – profil (ex: stack=Unity&lang=fr)\n"
-        "/history – derniers échanges\n"
-        "/forget [messages|projects|all] – oublier\n"
-        "/export – exporter JSON"
+        "/project_list â€“ liste tes projets\n"
+        "/prefs set <clÃ©> <valeur> â€“ prÃ©fÃ©rences (ex: langage python/fr)\n"
+        "/profile set key=value,... â€“ profil (ex: stack=Unity&lang=fr)\n"
+        "/history â€“ derniers Ã©changes\n"
+        "/forget [messages|projects|all] â€“ oublier\n"
+        "/export â€“ exporter JSON"
     )
 
 
@@ -453,7 +453,7 @@ async def cmd_web(update: Update, context: ContextTypes.DEFAULT_TYPE):
     Memory.ensure_user(user.id, user.username, user.first_name, user.last_name)
     query = " ".join(context.args) if context.args else ""
     if not query:
-        await update.message.reply_text("Utilisation: /web <requête>")
+        await update.message.reply_text("Utilisation: /web <requÃªte>")
         return
     summary, cites = web_tool(query)
     Memory.add_message(user.id, "user", f"[WEB QUERY] {query}")
@@ -479,7 +479,7 @@ async def cmd_project_add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     desc = parts[2] if len(parts) > 2 else ""
     pid = Memory.add_project(user.id, name, game, desc)
     Memory.bump_relationship(user.id, 0.4)
-    await update.message.reply_text(f"Projet #{pid} ajouté: {name} ({game})")
+    await update.message.reply_text(f"Projet #{pid} ajoutÃ©: {name} ({game})")
 
 
 @with_typing()
@@ -489,7 +489,7 @@ async def cmd_project_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not projects:
         await update.message.reply_text("Aucun projet. Ajoute-en avec /project_add")
         return
-    lines = [f"#{p['id']} – {p['name']} [{p['game']}]\n{p['description']}" for p in projects]
+    lines = [f"#{p['id']} â€“ {p['name']} [{p['game']}]\n{p['description']}" for p in projects]
     await update.message.reply_text("\n\n".join(lines)[:4000])
 
 
@@ -501,10 +501,10 @@ async def cmd_prefs(update: Update, context: ContextTypes.DEFAULT_TYPE):
         key = context.args[1]
         value = " ".join(context.args[2:])
         Memory.set_pref(user.id, key, value)
-        await update.message.reply_text(f"Préférence enregistrée: {key} = {value}")
+        await update.message.reply_text(f"PrÃ©fÃ©rence enregistrÃ©e: {key} = {value}")
     else:
         prefs = Memory.get_user(user.id).get("preferences", {})
-        await update.message.reply_text("Préférences actuelles:\n" + json.dumps(prefs, ensure_ascii=False, indent=2))
+        await update.message.reply_text("PrÃ©fÃ©rences actuelles:\n" + json.dumps(prefs, ensure_ascii=False, indent=2))
 
 
 @with_typing()
@@ -518,7 +518,7 @@ async def cmd_profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pairs = [p for p in arg.split("&") if "=" in p]
         updates = {k.strip(): v.strip() for k, v in (p.split("=", 1) for p in pairs)}
         Memory.update_profile(user.id, **updates)
-        await update.message.reply_text("Profil mis à jour.")
+        await update.message.reply_text("Profil mis Ã  jour.")
     else:
         profile = Memory.get_user(user.id).get("profile", {})
         await update.message.reply_text("Profil:\n" + json.dumps(profile, ensure_ascii=False, indent=2))
@@ -539,7 +539,7 @@ async def cmd_forget(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     scope = context.args[0] if context.args else "messages"
     deleted = Memory.forget(user.id, scope)
-    await update.message.reply_text(f"Oubli effectué (scope={scope}). Éléments supprimés: {deleted}")
+    await update.message.reply_text(f"Oubli effectuÃ© (scope={scope}). Ã‰lÃ©ments supprimÃ©s: {deleted}")
 
 
 @with_typing()
@@ -599,9 +599,9 @@ Sources:
 
     # Injection contexte relationnel court
     relation_nudge = (
-        "Réponds avec empathie, structure, et propose des TODO list à la fin si pertinent. "
-        "Si code fourni: inclure explications et étapes de test. "
-        "Si la question est générale, n'hésite pas à t'appuyer sur les informations du 'Contexte web' ci-dessus le cas échéant."
+        "RÃ©ponds avec empathie, structure, et propose des TODO list Ã  la fin si pertinent. "
+        "Si code fourni: inclure explications et Ã©tapes de test. "
+        "Si la question est gÃ©nÃ©rale, n'hÃ©site pas Ã  t'appuyer sur les informations du 'Contexte web' ci-dessus le cas Ã©chÃ©ant."
     )
 
     prompt = f"{relation_nudge}
@@ -643,7 +643,7 @@ async def main_async():
 
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    logger.info(f"{ASSISTANT_NAME} prêt.")
+    logger.info(f"{ASSISTANT_NAME} prÃªt.")
     await app.run_polling()
 
 
@@ -651,7 +651,7 @@ def main():
     try:
         asyncio.run(main_async())
     except (KeyboardInterrupt, SystemExit):
-        print("Arrêt demandé.")
+        print("ArrÃªt demandÃ©.")
 
 
 if __name__ == "__main__":
@@ -679,7 +679,7 @@ if __name__ == "__main__":
 # COPY requirements.txt ./
 # RUN pip install --no-cache-dir -r requirements.txt
 # COPY . .
-# # L'utilisateur non-root pour plus de sécurité
+# # L'utilisateur non-root pour plus de sÃ©curitÃ©
 # RUN useradd -m bot && chown -R bot:bot /app
 # USER bot
 # CMD ["python", "main.py"]
@@ -712,7 +712,7 @@ if __name__ == "__main__":
 # DB_PATH=/app/data/dolores.db
 
 # ----------------------------
-# GitHub Actions – .github/workflows/docker.yml
+# GitHub Actions â€“ .github/workflows/docker.yml
 # ----------------------------
 # name: build-and-push
 # on:
@@ -745,7 +745,7 @@ if __name__ == "__main__":
 #           push: true
 #           tags: ghcr.io/${{ github.repository_owner }}/dolores:latest
 #
-#       # Déploiement via SSH (optionnel) – nécessite secrets: SSH_HOST, SSH_USER, SSH_KEY
+#       # DÃ©ploiement via SSH (optionnel) â€“ nÃ©cessite secrets: SSH_HOST, SSH_USER, SSH_KEY
 #       # - name: Deploy over SSH
 #       #   uses: appleboy/ssh-action@v1.0.3
 #       #   with:
